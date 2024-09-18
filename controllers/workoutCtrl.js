@@ -45,13 +45,13 @@ const createWorkout = async (req, res) => {
   }
 };
 
-const getWorkouts = async (req, res) => {
+const getWorkout = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    const workoutHistory = await Workouts.find({ userId });
-
-    console.log("Query result:", workoutHistory);
+    const workoutHistory = await Workouts.find({ userId }).populate(
+      "exercises"
+    );
 
     if (!workoutHistory) {
       return res.status(404).json({ message: "No Workout Found" });
@@ -66,7 +66,74 @@ const getWorkouts = async (req, res) => {
   }
 };
 
+const updateWorkout = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { workoutName, exercises, duration, date } = req.body;
+
+    const userId = req.user._id;
+
+    const savedExercises = await Promise.all(
+      exercises.map(async (exercise) => {
+        if (exercise._id) {
+          return await Exercises.findByIdAndUpdate(exercise._id, exercise, {
+            new: true,
+          });
+        } else {
+          const newExercise = new Exercises({ ...exercise, userId });
+          return await newExercise.save();
+        }
+      })
+    );
+
+    const exerciseIds = savedExercises.map((exercise) => exercise._id);
+
+    const updatedWorkout = await Workouts.findByIdAndUpdate(
+      id,
+      { workoutName, exercises: exerciseIds, duration, date },
+      { new: true }
+    ).populate("exercises");
+
+    if (!updatedWorkout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    return res.status(200).json({
+      message: "Succesful",
+      workout: updatedWorkout,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteWorkout = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const workout = await Workouts.findById(id);
+
+    if (!workout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    if (workout.exercises.length > 0) {
+      await Exercises.deleteMany({ _id: { $in: workout.exercises } });
+    }
+
+    await Workouts.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "Successful",
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createWorkout,
-  getWorkouts,
+  getWorkout,
+  updateWorkout,
+  deleteWorkout,
 };

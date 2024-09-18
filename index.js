@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRoutes");
 const workoutRouter = require("./routes/workoutRoutes");
+const nutritionRouter = require("./routes/nutritionRoutes");
 
 app = express();
 
@@ -23,6 +24,8 @@ app.listen(PORT, () => {
 app.use("/api", authRouter);
 
 app.use("/api", workoutRouter);
+
+app.use("/api", nutritionRouter);
 
 app.use((req, res) => {
   res.status(404).json({

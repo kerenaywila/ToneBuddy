@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Workouts = require("../models/workoutModel");
 const Exercises = require("../models/exerciseModel");
+const Mealplans = require("../models/mealplanModel")
 
 const validateWorkout = async (req, res, next) => {
   const { workoutName, exercises, duration, date } = req.body;
@@ -48,6 +49,39 @@ const validateWorkout = async (req, res, next) => {
   next();
 };
 
+const validateNutrition = async (req, res, next) => {
+  const { mealName, ingredients, calories, proteins, carbs, fats } = req.body;
+
+  const errors = []
+
+  if (!mealName) {
+    errors.push("Please enter the meal name");
+  }
+  if (!ingredients) {
+    errors.push("Please enter the ingredients");
+  }
+  if (!calories) {
+    errors.push("Please enter the calories");
+  }
+  if (!proteins) {
+    errors.push("Please enter the protein");
+  }
+  if (!carbs) {
+    errors.push("Please enter the carb");
+  }
+  if (!fats) {
+    errors.push("Please enter the fat");
+  }
+  if (errors.length > 0) {
+    return res.status(404).json({
+      message: errors,
+    });
+  }
+
+  next()
+}
+
 module.exports = {
-  validateWorkout
+  validateWorkout,
+  validateNutrition
 };
