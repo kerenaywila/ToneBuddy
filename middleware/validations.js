@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Workouts = require("../models/workoutModel");
 const Exercises = require("../models/exerciseModel");
-const Mealplans = require("../models/mealplanModel")
+const Mealplans = require("../models/mealplanModel");
 
 const validateWorkout = async (req, res, next) => {
   const { workoutName, exercises, duration, date } = req.body;
@@ -11,7 +11,6 @@ const validateWorkout = async (req, res, next) => {
   if (!exercises || !Array.isArray(exercises) || exercises.length === 0) {
     errors.push("Please enter at least one exercise");
   } else {
-    
     exercises.forEach((exercise, index) => {
       if (!exercise.name) {
         errors.push(`Exercise ${index + 1}: Please enter the exercise name`);
@@ -52,7 +51,7 @@ const validateWorkout = async (req, res, next) => {
 const validateNutrition = async (req, res, next) => {
   const { mealName, ingredients, calories, proteins, carbs, fats } = req.body;
 
-  const errors = []
+  const errors = [];
 
   if (!mealName) {
     errors.push("Please enter the meal name");
@@ -78,10 +77,34 @@ const validateNutrition = async (req, res, next) => {
     });
   }
 
-  next()
-}
+  next();
+};
+
+const validateProgress = async (req, res, next) => {
+  const { date, weight, bodyMeasurements } = req.body;
+
+  const errors = [];
+
+  if (!date) {
+    errors.push("Please enter the date");
+  }
+  if (!weight) {
+    errors.push("Please enter your weight");
+  }
+  if (!bodyMeasurements) {
+    errors.push("Please enter your body Measurements");
+  }
+  if (errors.length > 0) {
+    return res.status(404).json({
+      message: errors,
+    });
+  }
+
+  next();
+};
 
 module.exports = {
   validateWorkout,
-  validateNutrition
+  validateNutrition,
+  validateProgress,
 };

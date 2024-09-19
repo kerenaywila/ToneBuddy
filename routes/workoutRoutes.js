@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/create-workout", validateToken, validateWorkout, createWorkout);
 
-router.get("/get-workout", validateToken, getWorkout);
+router.get("/find-workout", validateToken, getWorkout);
 
 router.put("/update-workout/:id", validateToken, updateWorkout);
 

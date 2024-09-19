@@ -7,6 +7,10 @@ const createWorkout = async (req, res) => {
 
     const userId = req.user._id;
 
+    const [day, month, year] = req.body.date.split("/");
+
+    const formattedDate = new Date(`${year}-${month}-${day}`);
+
     const savedExercises = await Promise.all(
       exercises.map(async (exercise) => {
         try {
@@ -25,7 +29,7 @@ const createWorkout = async (req, res) => {
     const workout = new Workouts({
       workoutName,
       duration,
-      date,
+      date: formattedDate,
       exercises: exerciseIds,
       userId,
     });
@@ -73,6 +77,10 @@ const updateWorkout = async (req, res) => {
 
     const userId = req.user._id;
 
+    const [day, month, year] = req.body.date.split("/");
+
+    const formattedDate = new Date(`${year}-${month}-${day}`);
+
     const savedExercises = await Promise.all(
       exercises.map(async (exercise) => {
         if (exercise._id) {
@@ -90,7 +98,7 @@ const updateWorkout = async (req, res) => {
 
     const updatedWorkout = await Workouts.findByIdAndUpdate(
       id,
-      { workoutName, exercises: exerciseIds, duration, date },
+      { workoutName, exercises: exerciseIds, duration, date: formattedDate },
       { new: true }
     ).populate("exercises");
 
