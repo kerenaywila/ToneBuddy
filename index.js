@@ -5,6 +5,7 @@ const authRouter = require("./routes/authRoutes");
 const workoutRouter = require("./routes/workoutRoutes");
 const nutritionRouter = require("./routes/nutritionRoutes");
 const progressRouter = require("./routes/progressRoutes");
+const certificateRouter = require("./routes/certificateRoutes");
 
 app = express();
 
@@ -29,6 +30,8 @@ app.use("/api", workoutRouter);
 app.use("/api", nutritionRouter);
 
 app.use("/api", progressRouter);
+
+app.use("/api", certificateRouter);
 
 app.use((req, res) => {
   res.status(404).json({

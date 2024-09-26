@@ -103,8 +103,30 @@ const validateProgress = async (req, res, next) => {
   next();
 };
 
+const validateCertificate = async (req, res, next) => {
+  const { fullName, email } = req.body;
+
+  errors = [];
+
+  if (!fullName) {
+    errors.push("Please enter your full name");
+  }
+  if (!email) {
+    errors.push("Please enter your email");
+  }
+
+  if (errors.length > 0) {
+    return res.status(404).json({
+      message: errors,
+    });
+  }
+
+  next();
+};
+
 module.exports = {
   validateWorkout,
   validateNutrition,
   validateProgress,
+  validateCertificate,
 };
