@@ -20,7 +20,7 @@ const sendUserCertificateEmail = async (
       to: userEmail,
       subject: "Your Certificate of Completion",
       html: `<div>
-                <h1>Hello, ${fullName}</h1>  <!-- Use fullName here -->
+                <h1>Hello, ${fullName}</h1>
                 <p>Congratulations! Attached is your certificate of completion.</p>
                 <h1>Thanks</h1>
                 </div>`,
@@ -33,7 +33,7 @@ const sendUserCertificateEmail = async (
     };
 
     const result = await mailTransporter.sendMail(detailsToSend);
-    console.log("Email sent successfully", result);
+    console.log("Successful", result);
     return result;
   } catch (error) {
     console.error("Error sending email:", error);

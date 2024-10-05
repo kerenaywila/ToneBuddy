@@ -26,7 +26,7 @@ const registerFunction = async (req, res) => {
     await newUser.save();
 
     return res.status(200).json({
-      message: "Account Created",
+      message: "Successful",
       user: newUser,
     });
   } catch (error) {

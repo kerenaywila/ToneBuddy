@@ -15,7 +15,7 @@ const sendCertificate = async (req, res) => {
 
     await sendUserCertificateEmail(email, { fullName }, certificatePath);
 
-    res.status(200).json({ message: "Certificate sent successfully" });
+    res.status(200).json({ message: "Successful" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
