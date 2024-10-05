@@ -69,7 +69,33 @@ const loginFunction = async (req, res) => {
   }
 };
 
+const resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const updatedPassword = await Users.findOneAndUpdate(
+      { email },
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!updatedPassword) {
+      return res.status(404).json({ message: "Account not find" });
+    }
+
+    return res.status(200).json({
+      message: "Successful",
+      user: updatedPassword,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerFunction,
   loginFunction,
+  resetPassword,
 };
